@@ -1,3 +1,7 @@
+// AquaVision - Multilingual Aquarium Analyzer
+// Updated: 2026-04-26T04:26:02.592183
+// BUILD MARKER: v3-multilingual-buttons-visible
+
 import { useState, useRef, useCallback } from "react";
 import { getTranslation } from "./translations";
 import { getSystemPrompt, getUserPrompt } from "./prompts";
