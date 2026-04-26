@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import { getTranslation } from "./translations";
 import { getSystemPrompt, getUserPrompt } from "./prompts";
 import { exportToText, exportToJSON } from "./exportUtils";
+import WelcomeGuide from "./WelcomeGuide";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // HELPERS
@@ -76,6 +77,7 @@ export default function AquaVision() {
   const [error, setError] = useState(null);
   const [debugInfo, setDebugInfo] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(false);
   const fileInputRef = useRef();
   
   const t = (key) => getTranslation(language, key);
@@ -568,6 +570,14 @@ export default function AquaVision() {
             </div>
           )}
         </div>
+      )}
+
+      {/* Welcome Guide Modal */}
+      {showWelcome && (
+        <WelcomeGuide 
+          onClose={() => setShowWelcome(false)} 
+          language={language}
+        />
       )}
 
       {/* Footer */}
