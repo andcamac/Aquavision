@@ -214,8 +214,34 @@ export default function AquaVision() {
   // Simple minimal render for testing
   return (
     <div style={{ minHeight: "100vh", background: "#050d1a", color: "#e8f4f8", padding: "20px", fontFamily: "Georgia, serif" }}>
-      {/* Language Toggle - ALWAYS VISIBLE */}
-      <div style={{ position: "fixed", top: "20px", right: "20px", zIndex: 1000 }}>
+      {/* Help & Language Buttons - ALWAYS VISIBLE */}
+      <div style={{ 
+        position: "fixed", 
+        top: "20px", 
+        right: "20px", 
+        zIndex: 1000,
+        display: "flex",
+        gap: "10px"
+      }}>
+        {/* Help Button */}
+        <button
+          onClick={() => setShowWelcome(true)}
+          style={{
+            background: "#1a2a3a",
+            color: "#7dd3fc",
+            border: "1px solid #1e3a5f",
+            borderRadius: "8px",
+            padding: "10px 16px",
+            fontSize: "0.95rem",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+          title={language === "es" ? "Ayuda y Guía" : "Help & Guide"}
+        >
+          ❓ {language === "es" ? "Ayuda" : "Help"}
+        </button>
+        
+        {/* Language Toggle */}
         <button
           onClick={() => setLanguage(language === "en" ? "es" : "en")}
           style={{
