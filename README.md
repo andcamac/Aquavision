@@ -25,7 +25,7 @@ Upload a photo of your **Tetra EasyStrips** water test results and AquaVision wi
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## 🚀 Quick Start
 
 ### 1. Clone the repository
 ```bash
@@ -45,7 +45,7 @@ cp .env.example .env
 
 Then open `.env` and add your Anthropic API key:
 ```
-ANTHROPIC_API_KEY=sk-ant-api03-your-key-here
+VITE_ANTHROPIC_API_KEY=sk-ant-api03-your-key-here
 ```
 
 Get a free API key at: https://console.anthropic.com
@@ -59,54 +59,23 @@ Open http://localhost:5173 in your browser.
 
 ---
 
-## ☁️ Deploy to Vercel (Recommended)
-
-### 1. Push to GitHub
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/aquavision.git
-git push -u origin main
-```
-
-### 2. Import to Vercel
-- Go to https://vercel.com
-- Click "Add New Project"
-- Import your GitHub repository
-
-### 3. Add Environment Variable
-In Vercel dashboard → Settings → Environment Variables:
-
-- **Name:** `ANTHROPIC_API_KEY` (not VITE_ANTHROPIC_API_KEY)
-- **Value:** Your API key from console.anthropic.com
-- **Environments:** ✅ Production ✅ Preview ✅ Development
-
-### 4. Deploy
-Click "Deploy" — done! Your API key stays secure server-side.
-
----
-
 ## 📁 Project Structure
 
 ```
 aquavision/
-├── api/
-│   └── analyze.js          # Serverless API endpoint (proxies Anthropic)
 ├── public/
-│   └── favicon.svg         # App icon
+│   └── favicon.svg          # App icon
 ├── src/
-│   ├── main.jsx           # React entry point
-│   ├── App.jsx            # Root component
-│   └── AquaVision.jsx     # Main app (UI + logic)
-├── .env.example           # Template for environment variables
-├── .gitignore             # Git ignore rules
-├── index.html             # HTML entry point
-├── package.json           # Dependencies and scripts
-├── vercel.json            # Vercel deployment config
-├── vite.config.js         # Vite configuration
-└── README.md              # This file
+│   ├── main.jsx            # React entry point
+│   ├── App.jsx             # Root component
+│   └── AquaVision.jsx      # Main app (UI + API logic)
+├── .env.example            # Template for environment variables
+├── .gitignore              # Git ignore rules
+├── index.html              # HTML entry point
+├── package.json            # Dependencies and scripts
+├── vercel.json             # Vercel deployment config
+├── vite.config.js          # Vite configuration
+└── README.md               # This file
 ```
 
 ---
@@ -114,17 +83,10 @@ aquavision/
 ## 🔧 How It Works
 
 1. **User uploads photo** → Image converted to base64 in browser
-2. **Sent to serverless API** → `/api/analyze` receives the request
-3. **Server calls Claude API** → Serverless function proxies to Anthropic
-4. **AI reads strips** → Claude analyzes colors against Tetra reference chart
-5. **Returns structured data** → JSON with readings, safety status, and actions
-6. **UI renders results** → Color-coded cards per tank with expert recommendations
-
-### Why a Serverless API?
-
-- ✅ **Security:** API key stays server-side (not exposed in browser)
-- ✅ **CORS:** No cross-origin issues
-- ✅ **Simple:** Just one file (`api/analyze.js`)
+2. **Sent to Claude API** → claude-sonnet-4-20250514 with detailed color reference chart
+3. **AI reads strips** → Claude analyzes pad colors against Tetra reference values
+4. **Structured response** → Returns JSON with readings, safety status, and actions
+5. **UI renders results** → Color-coded cards per tank with expert recommendations
 
 ### Safe Parameter Ranges
 
@@ -143,30 +105,42 @@ aquavision/
 
 - **React 18** — UI framework
 - **Vite 5** — Build tool and dev server
-- **Vercel Serverless Functions** — Backend API proxy
 - **Anthropic Claude API** — Vision AI (claude-sonnet-4-20250514)
+- **FileReader API** — Image to base64 conversion
 - **Pure CSS-in-JS** — No UI library dependencies
+
+---
+
+## 🚀 Deploy to Vercel
+
+1. Push your code to GitHub
+2. Go to https://vercel.com and import your repository
+3. Add environment variable:
+   - Name: `VITE_ANTHROPIC_API_KEY`
+   - Value: Your Anthropic API key
+4. Deploy!
+
+---
+
+## ⚠️ Security Note
+
+This app calls the Anthropic API directly from the browser. The API key is exposed in production builds.
+
+**For local development:** This is fine.
+
+**For production:** Consider adding a backend proxy (Express, Cloudflare Worker, Vercel Serverless Function) to keep your API key server-side.
 
 ---
 
 ## 🗺️ Roadmap
 
-- [x] Serverless API for secure key storage
+- [ ] Backend proxy for API key security
 - [ ] Test history tracking per tank
 - [ ] Fish species profiles with custom safe ranges
 - [ ] Dosing calculator
 - [ ] PWA support (installable on mobile)
 - [ ] PDF export of results
 - [ ] Push notifications for parameter alerts
-
----
-
-## 🔒 Security
-
-Your API key is **never exposed to the browser**. The serverless function at `/api/analyze` handles all Anthropic API calls server-side.
-
-**For local development:** API key in `.env` (never commit this file)  
-**For production:** API key in Vercel environment variables
 
 ---
 
@@ -183,21 +157,3 @@ Created to help aquarium hobbyists maintain healthy water conditions using AI-po
 **Not affiliated with Tetra or any aquarium product manufacturer.**
 
 Always verify critical readings with liquid test kits before making major tank adjustments.
-
----
-
-## 💡 Troubleshooting
-
-### "Failed to fetch" error
-- Make sure `ANTHROPIC_API_KEY` is set in Vercel environment variables
-- Redeploy after adding the environment variable
-
-### Local development issues
-- Make sure you copied `.env.example` to `.env`
-- Add your API key to `.env`
-- Restart the dev server after changing `.env`
-
-### API key not working
-- Get a fresh key from https://console.anthropic.com
-- Make sure it starts with `sk-ant-api03-`
-- Check you have free credits remaining
